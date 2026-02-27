@@ -1,61 +1,173 @@
 # Simple simulation of the fear mechanism
 
-## Setup
 
-1. Follow instructions [from this page](https://www.anaconda.com/download/success) to download and install Anaconda.
-2. Create a new conda environment for the simulation and activate it.
-```bash
+TLDR: Pasting this in terminal should run the fear simulation
 conda create --name fear_sim python=3.10
 conda activate fear_sim
-```
-3. Install the required libraries.
-```bash
-pip install neuron
-pip install bmtk
-```
-**Note:** on Windows, instead of running `pip install neuron`, install it [from this link](https://www.neuron.yale.edu/neuron/download). Also see [these instructions](neuron9_installation.txt).
-
-If you want to flash output to the micro:bit, additionally install
-```bash
-pip install uflash
-```
-
-4. Compile the modfiles.
-```
-cd fear_simulation/components/mechanisms
+pip install neuron bmtk uflash
+cd components/mechanisms
 nrnivmodl .
-```
-
-## Run
-
-The general algorithm for running a simulation is
-
-1. Update `parameters.py` to the right values.
-
-2. Run 
-```bash
+cd ../..
+rm -f config.json circuit_config.json simulation_config.json
 python build_network.py
 python update_configs.py
-```
-to build the network.
+python run_bionet.py config.json
+python check_output.py output
 
-3. Run `python run_bionet.py config.json` to run the simulation.
- 
-4. Run `python check_output.py` to compute the oscillation frequency. The script will also try to flash the output onto the micro:bit.
 
-Note: the output file must be on your local machine (to which the micro:bit is connected) for flashing to work. If you are running the scripts on a remote machine (e.g., FABRIC), you might need an additional step to transfer the outputs to your local machine.
+🧠 Fear Circuit Simulation (Mini-Project-1A)
 
-## To do
+This project simulates oscillatory activity in a simplified brain “fear circuit” using:
 
-(in case of questions, use AI augmentation)
+NEURON 9.x
 
-1. Apply a 0.2 nA current. What is the oscillation frequency? What emotional state can it correspond to?
-2. Apply a 1.0 nA current. What is the oscillation frequency? What emotional state can it correspond to?
+BMTK (Brain Modeling Toolkit)
 
-## To submit
+Python 3.10
 
-Submit a single Word document with:
-1. Answers to the questions in the **To do** section.
-2. Screenshots of the Terminal window showing the oscillation frequencies.
+Optional: micro:bit flashing via uflash
 
-Additionally, sumbit 2 short videos showcasing micro:bit flickering for the two cases. 
+The simulation allows you to inject different levels of current and observe the resulting oscillation frequency of the network.
+
+📦 Requirements
+
+Install:
+
+Python 3.10 (recommended via Anaconda)
+
+NEURON 9.x
+
+BMTK
+
+Optional: uflash (for micro:bit flashing)
+
+🛠️ Setup Instructions
+1️⃣ Create and Activate a Conda Environment
+conda create --name fear_sim python=3.10
+conda activate fear_sim
+2️⃣ Install Required Libraries
+Mac / Linux:
+pip install neuron
+pip install bmtk
+pip install uflash   # optional (for micro:bit)
+Windows:
+
+Install NEURON from:
+https://www.neuron.yale.edu/neuron/download
+
+Then run:
+
+pip install bmtk
+pip install uflash
+
+If NEURON is not recognized, follow the instructions in neuron9_installation.txt.
+
+3️⃣ Compile the Mechanism (.mod) Files
+
+Navigate to the mechanisms folder and compile:
+
+cd fear_simulation/components/mechanisms
+nrnivmodl .
+cd ../..
+
+You should see:
+
+Successfully created x86_64/special
+
+This step is required before running the simulation.
+
+▶️ Running the Simulation
+Step 1 — Set the Current Injection
+
+Open parameters.py and modify:
+
+I_E = 0.2
+
+or
+
+I_E = 1.0
+
+These values represent injected current in nanoamps (nA).
+
+Step 2 — Remove Old Configuration Files
+
+Each time you change parameters, delete old config files:
+
+rm -f config.json circuit_config.json simulation_config.json
+Step 3 — Build and Update the Network
+python build_network.py
+python update_configs.py
+Step 4 — Run the Simulation
+python run_bionet.py config.json
+
+You should see output similar to:
+
+Running simulation for 1000.000 ms...
+Simulation completed in X seconds
+Step 5 — Compute Oscillation Frequency
+python check_output.py output
+
+Example outputs:
+
+The network is oscillating around 3.91 Hz.
+
+or
+
+The network is oscillating around 19.53 Hz.
+🔬 Assignment Tasks
+
+Apply a 0.2 nA current
+
+Record oscillation frequency
+
+Interpret emotional state (e.g., calm / low arousal)
+
+Apply a 1.0 nA current
+
+Record oscillation frequency
+
+Interpret emotional state (e.g., high arousal / fear state)
+
+💾 Output Files
+
+Simulation results are stored in:
+
+output/
+
+Including:
+
+spikes.h5
+
+v_report.h5
+
+log.txt
+
+📲 Micro:bit Flashing (Optional)
+
+To flash results to a micro:bit:
+
+Install:
+
+pip install uflash
+
+Connect micro:bit via USB.
+
+Run:
+
+python check_output.py output
+
+⚠️ If running on a remote system (e.g., FABRIC), transfer the output files to your local machine before flashing.
+
+🗂 Project Structure
+fear_simulation/
+│
+├── build_network.py
+├── run_bionet.py
+├── update_configs.py
+├── check_output.py
+├── parameters.py
+├── network/
+├── components/
+└── output/
+
+
